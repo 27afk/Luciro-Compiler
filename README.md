@@ -37,7 +37,11 @@ Include the Lexer, Parser, and SAnalyzer directories in your project.
 Initialize the pipeline:
 
 Lexer lexer(sourceCode);
+
 Parser parser(lexer);
+
 ProgramNode* ast = parser.ParseProgram();
+
 SAnalyzer analyzer(lexer.firstToken); // Pass BaJav mode
+
 ast->accept(&analyzer);
