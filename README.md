@@ -1,3 +1,9 @@
+Current unfinished parts:
+- IR Optimizer
+- Code Gen ( assembly )
+- Linker 
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Key features
 - Nested Structure support
 - #BaJav# mode AKA error suppression mode to pull off wonky stuff ( to access BaJav mode just type "#BaJav#" at the front of ur program )
