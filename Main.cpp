@@ -21,8 +21,9 @@ struct Rect {
 
 void main() {
     Rect campus[5];
-    
+    double x = 67.1;
     campus[0].ID = 101;
+    int i = 5 - 10;
     campus[1].botRight.y = 50;
     if((campus[0].ID != 101) || (campus[1].botRight.y == 50)){
     return 0;
