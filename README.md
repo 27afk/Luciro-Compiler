@@ -4,7 +4,6 @@ apparenlty when u upload a folder onto github it doesn't work like that it just 
 
 
 Current unfinished parts:
-- IR Optimizer
 - Code Gen ( assembly )
 - Linker 
 
