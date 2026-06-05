@@ -1,3 +1,8 @@
+********************************************************
+apparenlty when u upload a folder onto github it doesn't work like that it just doesn't work on browser version so erm certain parts dont work yikes, will fix once done with codegen tho
+********************************************************
+
+
 Current unfinished parts:
 - IR Optimizer
 - Code Gen ( assembly )
