@@ -6,6 +6,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <fstream>
+#include "IRgen/IRgen.h"
 #include <array>
 
 /*
@@ -102,7 +103,7 @@ class CodeGen {
     int HeapCome(int nextRequestSize);
     bool isStack(int size, bool isArray, int ArraySize); // is it an array -1 if its dynamic for the future
     std::string RegToSt(CpuReg reg);
-
+	int getStackOffset(std::string varName); // get the stack offset of a variable
     
 
     // codegen functions
@@ -110,7 +111,9 @@ class CodeGen {
     void StoreGen(); // store variable
     void MallocGen(int size, std::string name);
     void LoadGen(); // load variable value
-    
+	void StoreGen(const Quad& q, const std::unordered_map<int, CpuReg>& allocation);
+    void LoadGen(const Quad& q, std::unordered_map<int, CpuReg>& allocation);
+    void CodeGen::ArithmeticGen(const Quad& q, const std::unordered_map<int, CpuReg>& allocation);
 
     // Graph Coloring functions & Variables
     std::unordered_map<std::string, double> spillPriorities;

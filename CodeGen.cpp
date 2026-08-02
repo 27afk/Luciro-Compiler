@@ -130,7 +130,17 @@ bool CodeGen::isStack(int size, bool isArray, int ArraySize) {
     return true;
 }
 
+int CodeGen::getStackOffset(std::string varName) {
+    for (size_t i = 0; i < SpillCatalogue.size(); ++i) {
+        if (SpillCatalogue[i].first == varName) {
+            return static_cast<int>(i * 8);
+        }
+    }
 
+    SpillCatalogue.push_back({ varName, CpuReg::RAX });
+    stackOffset += 8; 
+    return static_cast<int>((SpillCatalogue.size() - 1) * 8);
+}
 
 int CodeGen::HeapCome(int nextRequestSize) {
     // if not full just leave
@@ -164,3 +174,64 @@ void CodeGen::MallocGen(int size, std::string name) {
     HeapOffset += size;
 }
 
+void CodeGen::StoreGen(const Quad& q, const std::unordered_map<int, CpuReg>& allocation) {
+    auto destIt = allocation.find(q.res);
+    std::string destOffsetReg = RegToSt(destIt->second);
+
+    auto srcIt = allocation.find(q.arg1);
+
+    if (srcIt != allocation.end()) {
+        std::string srcRegName = RegToSt(srcIt->second);
+
+        ASMwrite("  mov [r15 + " + destOffsetReg + "], " + srcRegName, true);
+    }
+    else {
+        // if spill go rax
+        int stackPos = 0; // Look up spilled variable stack offset from SymbolTable
+        ASMwrite("  mov rax, [rsp + " + std::to_string(stackPos) + "]", true);
+        ASMwrite("  mov [r15 + " + destOffsetReg + "], rax", true);
+    }
+}
+
+void CodeGen::LoadGen(const Quad& q, std::unordered_map<int, CpuReg>& allocation) {
+    // get heap offset
+    auto srcIt = allocation.find(q.arg1);
+    std::string srcOffsetReg = RegToSt(srcIt->second);
+
+    // find destination register for the result
+    auto destIt = allocation.find(q.res);
+
+
+    if (destIt != allocation.end()) {
+        std::string destRegName = RegToSt(destIt->second);
+        ASMwrite("  mov " + destRegName + ", [r15 + " + srcOffsetReg + "]", true);
+    }
+    else {
+        int stackPos = 0;
+        ASMwrite("  mov rax, [r15 + " + srcOffsetReg + "]", true);
+        ASMwrite("  mov [rsp + " + std::to_string(stackPos) + "], rax", true);
+    }
+}
+/*
+void CodeGen::ArithmeticGen(const Quad& q, const std::unordered_map<int, CpuReg>& allocation) {
+	// check if the result, arg1, and arg2 are in registers
+    auto resIt = allocation.find(q.res);
+    auto arg1It = allocation.find(q.arg1);
+    auto arg2It = allocation.find(q.arg2);
+
+    bool resInReg = (resIt != allocation.end());
+    bool arg1InReg = (arg1It != allocation.end());
+    bool arg2InReg = (arg2It != allocation.end());
+
+    if (resInReg) {
+        if(arg)
+    }
+
+    if (q.op == IROp::ADD) {
+
+    }
+    else if(q.op == IROp::SUB) {
+    }
+    else if(q.op == IROp::MUL) {
+    }
+}*/
